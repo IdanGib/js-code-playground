@@ -16,6 +16,8 @@ html, body {
 
 #console {
     grid-area: console;
+    max-height: 100%;
+    overflow: auto;
 }
 
 #code {
