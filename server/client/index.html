@@ -9,7 +9,7 @@
      
     <link rel="stylesheet" href="lib/codemirror-5.61.0/lib/codemirror.css">
     <link rel="stylesheet" href="lib/codemirror-5.61.0/addon/hint/show-hint.css">
-
+    <link rel="stylesheet" href="lib/codemirror-5.61.0/theme/ttcn.css">
     <script src="lib/codemirror-5.61.0/lib/codemirror.js"></script>
     <script src="lib/codemirror-5.61.0/addon/hint/show-hint.js"></script>
     <script src="lib/codemirror-5.61.0/addon/hint/javascript-hint.js"></script>
@@ -24,8 +24,8 @@
         <div id="console" class="box">
         </div>
         <div id="footer" class="box">
-            <span>Run: Ctrl + Q</span>
-            <span>Clean: Ctrl + B</span>
+            <div>Run: Ctrl + Q</div>
+            <div>Clean: Ctrl + B</div>
         </div>
     </div>
 
@@ -37,36 +37,55 @@
                 const env = { url: `http://localhost:3000` };
                 const code = document.getElementById('code');
                 const cnsl = document.getElementById('console');
-                window.console.log = (msg) => {
-                    cnsl.innerText += ('' + msg);
+
+                function save() {
+                    localStorage.setItem("code", codeMirror.getValue());
                 }
+                console.stdlog = console.log.bind(console);
+                console.logs = [];
+                console.log = function(){
+                    console.logs.push(Array.from(arguments));
+                    console.stdlog.apply(console, arguments);
+                }
+                const autosave = setInterval(save, 100);
+
                 const codeMirror = CodeMirror(code, {
                     mode:  "javascript",
                     lineNumbers: true,
                     autoCloseBrackets: true,
                     autocorrect: true,
+                    theme: "ttcn",
                     extraKeys: {
                         "Ctrl-Space": "autocomplete", 
-                        "Ctrl-S": () => {},
+                        "Ctrl-S": save,
                         "Ctrl-B": () => {
                             cnsl.innerText = '';
                         },
                         "Ctrl-Q": () => {
+                            cnsl.innerText = '';
+                            
                             const code = codeMirror.getValue();
                             if(code) {
                                 try {
                                     const result = eval(code);
-                                    cnsl.innerText = result;  
+                                    cnsl.innerText = '\n' + result;  
+                                    cnsl.innerText = '\n' + console.logs.join('\n');
+                                    console.logs = [];
                                 } catch(e) {
-                                    cnsl.innerText = `ERROR: ${e.message}`;  
+                                    cnsl.innerText = `\nERROR: ${e.message}`;  
                                 }
-                        
                             }
+                           
                            
                         },
                     }
                 });
                 codeMirror.on('change', (cm, data) => {});
+                const initcode = localStorage.getItem("code");
+                if(initcode) {
+                    codeMirror.setValue(initcode);
+                }
+
             } catch(e) {
                 console.error(e);
             }
