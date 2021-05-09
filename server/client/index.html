@@ -22,7 +22,10 @@
            
         </div>
         <div id="console" class="box">
-            <div>Run: Ctrl + Q</div>
+        </div>
+        <div id="footer" class="box">
+            <span>Run: Ctrl + Q</span>
+            <span>Clean: Ctrl + B</span>
         </div>
     </div>
 
@@ -34,7 +37,9 @@
                 const env = { url: `http://localhost:3000` };
                 const code = document.getElementById('code');
                 const cnsl = document.getElementById('console');
-
+                window.console.log = (msg) => {
+                    cnsl.innerText += ('' + msg);
+                }
                 const codeMirror = CodeMirror(code, {
                     mode:  "javascript",
                     lineNumbers: true,
@@ -43,11 +48,19 @@
                     extraKeys: {
                         "Ctrl-Space": "autocomplete", 
                         "Ctrl-S": () => {},
+                        "Ctrl-B": () => {
+                            cnsl.innerText = '';
+                        },
                         "Ctrl-Q": () => {
                             const code = codeMirror.getValue();
                             if(code) {
-                                const eval = window.eval(code);
-                                cnsl.innerText = eval;  
+                                try {
+                                    const result = eval(code);
+                                    cnsl.innerText = result;  
+                                } catch(e) {
+                                    cnsl.innerText = `ERROR: ${e.message}`;  
+                                }
+                        
                             }
                            
                         },
