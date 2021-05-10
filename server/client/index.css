@@ -7,17 +7,36 @@ html, body {
     font-size: 16px;
 }
 
+button {
+    cursor: pointer;
+    border: none;
+    padding: 4px;
+    border-radius: 6px;
+}
+
 .box {
     padding: 16px;
     margin: 8px;
     box-shadow: 1px 1px 10px rgba(155, 0, 155, 0.3);
     border-radius: 8px;
 }
-
+hr {
+    border: none;
+    height: 1px;
+    width: auto;
+    background-color: #aaa;
+}
 #console {
     grid-area: console;
     max-height: 100%;
     overflow: auto;
+}
+
+#menu {
+    grid-area: menu;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 
 #code {
@@ -25,7 +44,7 @@ html, body {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 #footer {
@@ -43,8 +62,8 @@ html, body {
 
 .app {
     display: grid;
-    grid-template-areas: 'code console' 'footer footer';
-    grid-template-columns: auto 30%;
+    grid-template-areas: 'code console menu' 'footer footer menu';
+    grid-template-columns: auto 30% 80px;
     grid-template-rows: auto 10%;
     height: 100%;
 }

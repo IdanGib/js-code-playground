@@ -18,15 +18,20 @@
 </head>
 <body>
     <div class='app'>
-        <div id="code" class="box">
-           
-        </div>
+        
+        <div id="code" class="box"></div>
         <div id="console" class="box">
+            <div>
+                <button onclick="run()">Ctrl + Q</button>
+                <button onclick="clean()">Ctrl + B</button>
+            </div>
+            <hr>
+            <div id="logs"></div>
         </div>
+        <div id="menu" class="box"></div>
         <div id="footer" class="box">
-            <div>Run: Ctrl + Q</div>
-            <div>Clean: Ctrl + B</div>
         </div>
+
     </div>
 
     <script src="/index.js"></script>
@@ -36,7 +41,7 @@
 
                 const env = { url: `http://localhost:3000` };
                 const code = document.getElementById('code');
-                const cnsl = document.getElementById('console');
+                const cnsl = document.getElementById('logs');
 
                 function save() {
                     localStorage.setItem("code", codeMirror.getValue());
@@ -48,20 +53,11 @@
                     console.stdlog.apply(console, arguments);
                 }
                 const autosave = setInterval(save, 100);
-
-                const codeMirror = CodeMirror(code, {
-                    mode:  "javascript",
-                    lineNumbers: true,
-                    autoCloseBrackets: true,
-                    autocorrect: true,
-                    theme: "ttcn",
-                    extraKeys: {
-                        "Ctrl-Space": "autocomplete", 
-                        "Ctrl-S": save,
-                        "Ctrl-B": () => {
-                            cnsl.innerText = '';
-                        },
-                        "Ctrl-Q": () => {
+                function clean() {
+                    cnsl.innerText = '';
+                }
+                function run() {
+                    {
                             cnsl.innerText = '';
                             
                             const code = codeMirror.getValue();
@@ -77,7 +73,19 @@
                             }
                            
                            
-                        },
+                        }
+                }
+                const codeMirror = CodeMirror(code, {
+                    mode:  "javascript",
+                    lineNumbers: true,
+                    autoCloseBrackets: true,
+                    autocorrect: true,
+                    theme: "ttcn",
+                    extraKeys: {
+                        "Ctrl-Space": "autocomplete", 
+                        "Ctrl-S": save,
+                        "Ctrl-B": clean,
+                        "Ctrl-Q": run,
                     }
                 });
                 codeMirror.on('change', (cm, data) => {});
@@ -85,7 +93,9 @@
                 if(initcode) {
                     codeMirror.setValue(initcode);
                 }
-
+                window.save = save;
+                window.clean = clean;
+                window.run = run;
             } catch(e) {
                 console.error(e);
             }
