@@ -30,10 +30,6 @@ html, body {
 
 #footer {
     grid-area: footer;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    justify-content: space-evenly;
 }
 
 #code .CodeMirror {
