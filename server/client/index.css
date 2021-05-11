@@ -10,8 +10,11 @@ html, body {
 button {
     cursor: pointer;
     border: none;
-    padding: 4px;
+    padding: 4px 16px;
     border-radius: 6px;
+    font-family: monospace;
+    text-transform: uppercase;
+    font-style: italic;
 }
 
 .box {
@@ -24,14 +27,18 @@ hr {
     border: none;
     height: 1px;
     width: auto;
-    background-color: #aaa;
+    background-color: #eee;
 }
 #console {
     grid-area: console;
     max-height: 100%;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
-
+#console #logs {
+    flex-grow: 1;
+}
 #menu {
     grid-area: menu;
     display: flex;
